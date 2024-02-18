@@ -1,3 +1,9 @@
+import { Counter } from 'features/Counter';
+
 export const App = () => {
-  return <div>New react app</div>;
+  return (
+    <div>
+      <Counter />
+    </div>
+  );
 };

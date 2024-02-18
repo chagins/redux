@@ -18,7 +18,12 @@ module.exports = {
     'prettier',
   ],
   root: true,
-  overrides: [],
+  overrides: [
+    {
+      files: ['src/**/*.slice.ts'],
+      rules: { 'no-param-reassign': ['error', { props: false }] }
+    }
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
