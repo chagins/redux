@@ -1,6 +1,6 @@
 import { AppLayout } from 'components/AppLayout';
-import { AddPostForm, PostsList } from 'features/posts';
-import { Routes, Route } from 'react-router-dom';
+import { AddPostForm, EditPostForm, PostsList, SinglePostPage } from 'features/posts';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 export const App = () => {
   return (
@@ -15,6 +15,9 @@ export const App = () => {
             </>
           }
         />
+        <Route path="/posts/:postId" element={<SinglePostPage />} />
+        <Route path="/editPost/:postId" element={<EditPostForm />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Route>
     </Routes>
   );
