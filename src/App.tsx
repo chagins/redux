@@ -1,4 +1,5 @@
 import { AppLayout } from 'components/AppLayout';
+import { AddPostForm, PostsList } from 'features/posts';
 import { Routes, Route } from 'react-router-dom';
 
 export const App = () => {
@@ -8,9 +9,10 @@ export const App = () => {
         <Route
           index
           element={
-            <section>
-              <h2>Welcome to the Redux Essentials example app!</h2>
-            </section>
+            <>
+              <AddPostForm />
+              <PostsList />
+            </>
           }
         />
       </Route>

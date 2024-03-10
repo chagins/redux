@@ -112,6 +112,18 @@ section h1 {
   font-size: 3rem;
 }
 
+section form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: flex-start;
+}
+
+section form input,
+section form textarea {
+  width: 100%;
+}
+
 /* Posts list */
 
 .post h2 {
