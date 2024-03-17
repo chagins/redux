@@ -7,10 +7,13 @@ export const EditPostForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { postId } = useParams();
+
   const post = useAppSelector((state) => state.posts.find((item) => item.id === postId));
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
+
+  const userId = post?.userId;
 
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -21,8 +24,8 @@ export const EditPostForm: React.FC = () => {
   };
 
   const onSavePostClicked = () => {
-    if (title && content && postId) {
-      dispatch(postUpdated({ id: postId, title, content }));
+    if (title && content && postId && userId) {
+      dispatch(postUpdated({ id: postId, title, content, userId, reactions: post.reactions }));
       navigate(`/posts/${postId}`);
     }
   };

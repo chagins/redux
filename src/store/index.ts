@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { postsReducer } from 'features/posts';
+import { usersReducer } from 'features/users';
 
 /**
  * The Redux store instance.
@@ -7,6 +8,7 @@ import { postsReducer } from 'features/posts';
 export const store = configureStore({
   reducer: {
     posts: postsReducer,
+    users: usersReducer,
   },
 });
 
