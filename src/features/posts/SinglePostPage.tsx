@@ -4,11 +4,12 @@ import { Link, useParams } from 'react-router-dom';
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButtons';
+import { selectPostById } from './model';
 
 export const SinglePostPage: React.FC = () => {
   const { postId } = useParams();
 
-  const post = useAppSelector((state) => state.posts.find((item) => item.id === postId));
+  const post = useAppSelector((state) => selectPostById(state, postId));
 
   if (!post) {
     return (

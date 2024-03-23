@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useAppSelector, useAppDispatch } from 'hooks/store';
 import { useParams, useNavigate } from 'react-router-dom';
-import { postUpdated } from './posts.slice';
+import { postUpdated, selectPostById } from './model';
 
 export const EditPostForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { postId } = useParams();
 
-  const post = useAppSelector((state) => state.posts.find((item) => item.id === postId));
+  const post = useAppSelector((state) => selectPostById(state, postId));
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');

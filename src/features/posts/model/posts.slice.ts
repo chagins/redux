@@ -1,11 +1,19 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
-import { ReactionEmoji } from 'lib/constants';
+import { LoadingState, ReactionEmoji } from 'lib/constants';
 import { Post, ReactionEmojiCount } from 'lib/types';
+import { fetchPosts } from './thunks';
 
-/**
- * Represents the initial state of the posts slice.
- */
-const initialState: Post[] = [];
+interface PostsSliceState {
+  data: Post[];
+  status: LoadingState;
+  error: string | null;
+}
+
+const initialState: PostsSliceState = {
+  data: [],
+  status: LoadingState.IDLE,
+  error: null,
+};
 
 const initialReactions: ReactionEmojiCount = {
   eyes: 0,
@@ -24,7 +32,7 @@ const postsSlice = createSlice({
   reducers: {
     postAdded: {
       reducer(state, action: PayloadAction<Post>) {
-        state.push(action.payload);
+        state.data.push(action.payload);
       },
       prepare(payload: Omit<Post, 'id' | 'date' | 'reactions'>) {
         const { title, content, userId } = payload;
@@ -43,7 +51,7 @@ const postsSlice = createSlice({
     postUpdated: {
       reducer(state, action: PayloadAction<Post>) {
         const { id, title, content, date } = action.payload;
-        const existingPost = state.find((post) => post.id === id);
+        const existingPost = state.data.find((post) => post.id === id);
 
         if (existingPost) {
           existingPost.title = title;
@@ -62,12 +70,26 @@ const postsSlice = createSlice({
     },
     reactionAdded(state, action: PayloadAction<{ postId: string; reaction: ReactionEmoji }>) {
       const { postId, reaction } = action.payload;
-      const existingPost = state.find((post) => post.id === postId);
+      const existingPost = state.data.find((post) => post.id === postId);
 
       if (existingPost) {
         existingPost.reactions[reaction] += 1;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = LoadingState.LOADING;
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = LoadingState.SUCCEEDED;
+        state.data = state.data.concat(action.payload);
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = LoadingState.FAILED;
+        state.error = action.error.message || 'Failed to fetch posts';
+      });
   },
 });
 

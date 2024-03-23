@@ -5,3 +5,10 @@ export enum ReactionEmoji {
   rocket = 'rocket',
   eyes = 'eyes',
 }
+
+export enum LoadingState {
+  IDLE = 'idle',
+  LOADING = 'loading',
+  SUCCEEDED = 'succeeded',
+  FAILED = 'failed',
+}

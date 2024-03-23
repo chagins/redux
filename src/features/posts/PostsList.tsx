@@ -1,35 +1,60 @@
-import { useAppSelector } from 'hooks/store';
-import React from 'react';
+import { useAppDispatch, useAppSelector } from 'hooks/store';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { LoadingState } from 'lib/constants';
+import { Post } from 'lib/types';
+import { Spinner } from 'components/Spinner';
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactionButtons';
+import { selectAllPosts, fetchPosts } from './model';
 
-/**
- * Renders a list of posts.
- */
-export const PostsList: React.FC = () => {
-  const posts = useAppSelector((state) => state.posts);
+const PostExcerpt: React.FC<{ post: Post }> = ({ post }) => {
+  const { id, title, userId, date, content } = post;
 
-  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date));
-
-  const renderedPosts = orderedPosts.map((post) => (
-    <article className="post-excerpt" key={post.id}>
-      <h3>{post.title}</h3>
-      <PostAuthor userId={post.userId} />
-      <TimeAgo timestamp={post.date} />
-      <p className="post-content">{post.content.substring(0, 100)}</p>
+  return (
+    <article className="post-excerpt" key={id}>
+      <h3>{title}</h3>
+      <PostAuthor userId={userId} />
+      <TimeAgo timestamp={date} />
+      <p className="post-content">{content.substring(0, 100)}</p>
       <ReactionButtons post={post} />
-      <Link to={`/posts/${post.id}`} className="button muted-button">
+      <Link to={`/posts/${id}`} className="button muted-button">
         View Post
       </Link>
     </article>
-  ));
+  );
+};
+
+export const PostsList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { data: posts } = useAppSelector(selectAllPosts);
+  const postStatus = useAppSelector((state) => state.posts.status);
+
+  useEffect(() => {
+    if (postStatus === LoadingState.IDLE) {
+      dispatch(fetchPosts());
+    }
+  }, [dispatch, postStatus]);
+
+  const getContent = () => {
+    switch (postStatus) {
+      case LoadingState.FAILED:
+        return <div>Failed to load posts.</div>;
+      case LoadingState.SUCCEEDED:
+        return posts
+          .toSorted((a, b) => b.date.localeCompare(a.date))
+          .map((post) => <PostExcerpt key={post.id} post={post} />);
+      case LoadingState.LOADING:
+      default:
+        return <Spinner text="Loading..." />;
+    }
+  };
 
   return (
     <section className="posts-list">
       <h2>Posts</h2>
-      {renderedPosts}
+      {getContent()}
     </section>
   );
 };

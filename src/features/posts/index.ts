@@ -1,4 +1,4 @@
-export { postsReducer, postAdded } from './posts.slice';
+export { postsReducer, postAdded } from './model/posts.slice';
 export { PostsList } from './PostsList';
 export { AddPostForm } from './AddPostForm';
 export { SinglePostPage } from './SinglePostPage';

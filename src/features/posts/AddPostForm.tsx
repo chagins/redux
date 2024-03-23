@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from 'hooks/store';
 import React, { useState } from 'react';
-import { postAdded } from './posts.slice';
+import { postAdded } from './model';
 
 export const AddPostForm: React.FC = () => {
   const dispatch = useAppDispatch();

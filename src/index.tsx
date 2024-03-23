@@ -4,20 +4,27 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { store } from 'store';
 import { App } from 'App';
+import { worker } from './api/server';
 
 import './index.css';
 
-const rootElement = document.getElementById('root');
+async function main() {
+  await worker.start({ onUnhandledRequest: 'bypass' });
 
-if (rootElement) {
-  const root = createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </Provider>
-    </React.StrictMode>
-  );
+  const rootElement = document.getElementById('root');
+
+  if (rootElement) {
+    const root = createRoot(rootElement);
+    root.render(
+      <React.StrictMode>
+        <Provider store={store}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </Provider>
+      </React.StrictMode>
+    );
+  }
 }
+
+main();
