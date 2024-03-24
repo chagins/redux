@@ -1,5 +1,6 @@
 import { AppLayout } from 'components/AppLayout';
 import { AddPostForm, EditPostForm, PostsList, SinglePostPage } from 'features/posts';
+import { UserPage, UsersList } from 'features/users';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
 export const App = () => {
@@ -17,6 +18,8 @@ export const App = () => {
         />
         <Route path="/posts/:postId" element={<SinglePostPage />} />
         <Route path="/editPost/:postId" element={<EditPostForm />} />
+        <Route path="/users" element={<UsersList />} />
+        <Route path="/users/:userId" element={<UserPage />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Route>
     </Routes>

@@ -1,11 +1,12 @@
 import { useAppDispatch, useAppSelector } from 'hooks/store';
 import React, { useState } from 'react';
 import { LoadingState } from 'lib/constants';
+import { selectAllUsers } from 'features/users/model';
 import { addPost } from './model';
 
 export const AddPostForm: React.FC = () => {
   const dispatch = useAppDispatch();
-  const users = useAppSelector((state) => state.users);
+  const users = useAppSelector(selectAllUsers);
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');

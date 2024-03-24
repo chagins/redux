@@ -9,7 +9,7 @@ import { selectPostById } from './model';
 export const SinglePostPage: React.FC = () => {
   const { postId } = useParams();
 
-  const post = useAppSelector((state) => selectPostById(state, postId));
+  const post = useAppSelector(selectPostById(postId));
 
   if (!post) {
     return (

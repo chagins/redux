@@ -8,7 +8,7 @@ export const EditPostForm: React.FC = () => {
   const navigate = useNavigate();
   const { postId } = useParams();
 
-  const post = useAppSelector((state) => selectPostById(state, postId));
+  const post = useAppSelector(selectPostById(postId));
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');

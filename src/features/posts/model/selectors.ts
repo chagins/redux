@@ -1,3 +1,3 @@
 export const selectAllPosts = (state: RootState) => state.posts;
-export const selectPostById = (state: RootState, postId: string | undefined) =>
+export const selectPostById = (postId: string | undefined) => (state: RootState) =>
   state.posts.data.find((post) => post.id === postId);
