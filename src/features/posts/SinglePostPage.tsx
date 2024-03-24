@@ -23,7 +23,7 @@ export const SinglePostPage: React.FC = () => {
     <section>
       <article className="post">
         <h2>{post.title}</h2>
-        <PostAuthor userId={post.userId} />
+        <PostAuthor userId={post.user} />
         <TimeAgo timestamp={post.date} />
         <p className="post-content">{post.content}</p>
         <ReactionButtons post={post} />

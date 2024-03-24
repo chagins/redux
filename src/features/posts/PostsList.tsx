@@ -10,12 +10,12 @@ import { ReactionButtons } from './ReactionButtons';
 import { selectAllPosts, fetchPosts } from './model';
 
 const PostExcerpt: React.FC<{ post: Post }> = ({ post }) => {
-  const { id, title, userId, date, content } = post;
+  const { id, title, user, date, content } = post;
 
   return (
     <article className="post-excerpt" key={id}>
       <h3>{title}</h3>
-      <PostAuthor userId={userId} />
+      <PostAuthor userId={user} />
       <TimeAgo timestamp={date} />
       <p className="post-content">{content.substring(0, 100)}</p>
       <ReactionButtons post={post} />

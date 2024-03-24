@@ -1,7 +1,7 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit';
 import { LoadingState, ReactionEmoji } from 'lib/constants';
 import { Post, ReactionEmojiCount } from 'lib/types';
-import { fetchPosts } from './thunks';
+import { addPost, fetchPosts } from './thunks';
 
 interface PostsSliceState {
   data: Post[];
@@ -35,13 +35,13 @@ const postsSlice = createSlice({
         state.data.push(action.payload);
       },
       prepare(payload: Omit<Post, 'id' | 'date' | 'reactions'>) {
-        const { title, content, userId } = payload;
+        const { title, content, user } = payload;
         return {
           payload: {
             id: nanoid(),
             title,
             content,
-            userId,
+            user,
             date: new Date().toISOString(),
             reactions: { ...initialReactions },
           },
@@ -89,6 +89,9 @@ const postsSlice = createSlice({
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = LoadingState.FAILED;
         state.error = action.error.message || 'Failed to fetch posts';
+      })
+      .addCase(addPost.fulfilled, (state, action) => {
+        state.data.push(action.payload);
       });
   },
 });

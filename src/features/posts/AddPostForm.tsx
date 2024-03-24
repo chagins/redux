@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from 'hooks/store';
 import React, { useState } from 'react';
-import { postAdded } from './model';
+import { LoadingState } from 'lib/constants';
+import { addPost } from './model';
 
 export const AddPostForm: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -8,12 +9,14 @@ export const AddPostForm: React.FC = () => {
 
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [userId, setUserId] = useState('');
+  const [user, setUser] = useState('');
+  const [requestStatus, setRequestStatus] = useState<LoadingState>(LoadingState.IDLE);
 
-  const canSave = Boolean(title) && Boolean(content) && Boolean(userId);
-  const usersOptions = users.map((user) => (
-    <option key={user.id} value={user.id}>
-      {user.name}
+  const canSave = [title, content, user].every(Boolean) && requestStatus === LoadingState.IDLE;
+
+  const usersOptions = users.map((item) => (
+    <option key={item.id} value={item.id}>
+      {item.name}
     </option>
   ));
 
@@ -22,14 +25,21 @@ export const AddPostForm: React.FC = () => {
   const onContentChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setContent(e.target.value);
 
-  const onAuthorChanged = (e: React.ChangeEvent<HTMLSelectElement>) => setUserId(e.target.value);
+  const onAuthorChanged = (e: React.ChangeEvent<HTMLSelectElement>) => setUser(e.target.value);
 
-  const onSavePostClicked = () => {
+  const onSavePostClicked = async () => {
     if (canSave) {
-      dispatch(postAdded({ title, content, userId }));
-
-      setTitle('');
-      setContent('');
+      try {
+        setRequestStatus(LoadingState.LOADING);
+        await dispatch(addPost({ title, content, user })).unwrap();
+        setTitle('');
+        setContent('');
+        setUser('');
+      } catch (error) {
+        console.error('Error adding post', error);
+      } finally {
+        setRequestStatus(LoadingState.IDLE);
+      }
     }
   };
 
@@ -46,7 +56,7 @@ export const AddPostForm: React.FC = () => {
           onChange={onTitleChanged}
         />
         <label htmlFor="postAuthor">Author:</label>
-        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
+        <select id="postAuthor" value={user} onChange={onAuthorChanged}>
           <option value="" />
           {usersOptions}
         </select>
